@@ -1,0 +1,11 @@
+files :
+	Dockerfile
+		has all the setup of the container in it
+	configuration.config
+		has extra configurations inside
+
+FROM : which image to use as base for container
+COPY : gives base (existing) files/directories to the container
+WORKDIR : what it should launch the application from (absolute path ? 'imaginary' one ?)
+RUN : the command to build the program (compilation) (shell format)
+CMD : the command to run the program after it's been compiled (shell format)

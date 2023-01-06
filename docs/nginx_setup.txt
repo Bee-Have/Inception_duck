@@ -1,0 +1,10 @@
+
+Dockerfile :
+FROM alpine
+RUN apt-get -y update && apt-get -y install nginx
+	check for updates and install nginx if it's not already installed
+
+nginx.config : (change name ?)
+server {
+	listen 
+}
