@@ -1,5 +1,5 @@
-FROM alpine
+FROM ubuntu
 RUN apt-get -y update && apt-get -y install nginx
-COPY default /etc/nginx/sites-available/default
+COPY conf /etc/nginx/sites-available/conf
 EXPOSE 80/tcp
 CMD ["/usr/sbin/nginx", "-g", "deamon off;"]
