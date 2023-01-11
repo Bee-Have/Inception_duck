@@ -1,5 +1,10 @@
 steps :
 -install nginx
+-install wordpress
+
+should this be in a script run by cmd since it's not a container of itself ?
+(sound about right)
+
 -install php-fpm
 -configure php-fpm
 -configure nginx for php-fpm
