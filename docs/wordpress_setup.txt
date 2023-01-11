@@ -1,0 +1,10 @@
+if wp-config already exists ?
+
+else :
+modify "wp-config-sample.php"
+	change db name :
+	change username :
+	change password :
+	change server name :
+
+rename "wp-config-sample.php" -> "wp-config.php"
