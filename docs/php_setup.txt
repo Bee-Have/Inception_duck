@@ -1,0 +1,7 @@
+steps :
+-install nginx
+-install php-fpm
+-configure php-fpm
+-configure nginx for php-fpm
+?-test nginx php-fpm configuration
+-launch wordpress
