@@ -20,3 +20,6 @@ echo "pm.max_spare_servers = 20" &>>wordpress_pool.conf
 echo "pm.process_idle_timeout = 10s" &>>wordpress_pool.conf
 
 systemctl start php7.3-fpm
+
+nginx-t
+systemctl restart nginx
