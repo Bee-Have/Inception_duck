@@ -13,6 +13,7 @@ RUN groupadd wordpress_user && useradd -g wordpress_user wordpress_user
 # NGINX
 RUN apt-get -y update && apt-get -y install nginx
 COPY conf /etc/nginx/sites-available/conf
-EXPOSE 80/tcp
+COPY php_fpm_setup.sh php_fpm_setup.sh
+EXPOSE 8080/tcp
+CMD ["/bin/sh", "./php_fpm_setup.sh"]
 
-CMD ["sh php_fpm_setup.sh", "/usr/sbin/nginx", "-g", "deamon off;"]

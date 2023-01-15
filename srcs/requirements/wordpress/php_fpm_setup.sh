@@ -19,7 +19,24 @@ echo "pm.min_spare_servers = 5" &>>wordpress_pool.conf
 echo "pm.max_spare_servers = 20" &>>wordpress_pool.conf
 echo "pm.process_idle_timeout = 10s" &>>wordpress_pool.conf
 
-systemctl start php7.3-fpm
+/etc/init.d/php7.3-fpm start
+# systemctl start php7.3-fpm
 
-nginx-t
-systemctl restart nginx
+# nginx -t
+# /etc/init.d/nginx restart
+# systemctl restart nginx
+
+#this is part of the nginx setup file
+
+/usr/sbin/nginx -g "daemon off;"
+
+NGINX_PROCESS=1
+while [ $NGINX_PROCESS -eq 1 ]
+do
+	sleep 10
+	ps aux | grep -v "grep" | grep "nginx"
+	if [ $? -ne 0 ]
+	then
+		NGINX_PROCESS=0
+	fi
+done
