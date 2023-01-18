@@ -21,14 +21,14 @@ echo "pm.process_idle_timeout = 10s" &>>wordpress_pool.conf
 
 /etc/init.d/php7.3-fpm start
 
-rm /var/www/html/index.html
+# rm /var/www/html/index.html
 
 /usr/sbin/nginx -g "daemon off;"
 
 NGINX_PROCESS=1
 while [ $NGINX_PROCESS -eq 1 ]
 do
-	sleep 10
+	sleep 5
 	ps aux | grep -v "grep" | grep "nginx"
 	if [ $? -ne 0 ]
 	then
