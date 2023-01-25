@@ -3,16 +3,16 @@ version : '3'
 services:
 
   nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx:/etc/nginx/conf.d:ro
-      - ./logs/nginx:/var/log/nginx
-      - ./wordpress:/var/www/html
+    build: ./requirements/nginx
+    container_name: nginx
+    image: nginx
     ports:
       - '443:443'
     depends_on:
       - wordpress
-    restart: always
+    networks:
+      - custom-network
+    restart: unless-stopped
 
   mysql:
     image: mariadb
@@ -38,3 +38,6 @@ services:
     links:
       - mysql
     restart: always
+
+networks:
+  custom-network:
