@@ -2,18 +2,6 @@ version : '3'
 
 services:
 
-  nginx:
-    build: ./requirements/nginx
-    container_name: nginx
-    image: nginx
-    ports:
-      - '443:443'
-    depends_on:
-      - wordpress
-    networks:
-      - custom-network
-    restart: unless-stopped
-
   mysql:
     image: mariadb
     ports:
@@ -39,5 +27,14 @@ services:
       - mysql
     restart: always
 
-networks:
-  custom-network:
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    image: nginx
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./wordpress:/var/www/html
+    depends_on:
+      - wordpress
+    restart: unless-stopped
