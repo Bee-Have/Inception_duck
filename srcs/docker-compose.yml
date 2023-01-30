@@ -3,28 +3,43 @@ version : '3'
 services:
 
   mysql:
+    build: ./requirements/mariadb
+    container_name: mariadb
     image: mariadb
     ports:
       - '3306:3306'
     volumes:
-      - ./mariadb:/var/lib/mysql
+      - ./mysql_volume:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=aqwe123
+      ROOT_PASSWORD: ${ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PATH: ${MYSQL_PATH}
+    networks:
+      - custom-network
     restart: always
 
   wordpress:
-    image: wordpress:4.7.1-php7.0-fpm
+    build: ./requirements/wordpress
+    container_name: wordpress
+    image: wordpress
     ports:
       - '9000:9000'
     volumes:
-      - ./wordpress:/var/www/html
-    environment:
-      - WORDPRESS_DB_NAME=wpdb
-      - WORDPRESS_TABLE_PREFIX=wp_
-      - WORDPRESS_DB_HOST=mysql
-      - WORDPRESS_DB_PASSWORD=test
-    links:
+      - ./wordpress_volume:/var/www/html
+    depends_on:
       - mysql
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      WP_PATH: ${WP_PATH}
+      URL: ${URL}
+      DB_HOST: ${DB_HOST}
+      TITLE: ${TITLE}
+    networks:
+      - custom-network
     restart: always
 
   nginx:
@@ -34,7 +49,26 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - ./wordpress:/var/www/html
-    depends_on:
+      - ./wordpress_volume:/var/www/html
+    links:
       - wordpress
+    networks:
+      - custom-network
     restart: unless-stopped
+
+networks:
+  custom-network:
+
+volumes:
+  mysql_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${MYSQL_VOLUME_PATH}
+      o: bind
+  wordpress_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${WP_VOLUME_PATH}
+      o: bind

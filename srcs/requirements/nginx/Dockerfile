@@ -1,6 +1,6 @@
 FROM debian:buster
 
-RUN apt-get -y update && apt-get -y install nginx
+RUN apt-get -y update && apt-get -y upgrade && apt-get -y install nginx
 
 COPY nginx.conf /etc/nginx/sites-available/default
 
