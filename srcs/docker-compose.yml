@@ -11,13 +11,13 @@ services:
     volumes:
       - ./mysql_volume:/var/lib/mysql
     environment:
-      ROOT_PASSWORD: ${ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_PATH: ${MYSQL_PATH}
     networks:
-      - custom-network
+      - amarini-network
     restart: always
 
   wordpress:
@@ -39,7 +39,7 @@ services:
       DB_HOST: ${DB_HOST}
       TITLE: ${TITLE}
     networks:
-      - custom-network
+      - amarini-network
     restart: always
 
   nginx:
@@ -53,11 +53,11 @@ services:
     links:
       - wordpress
     networks:
-      - custom-network
+      - amarini-network
     restart: unless-stopped
 
 networks:
-  custom-network:
+  amarini-network:
 
 volumes:
   mysql_volume:
