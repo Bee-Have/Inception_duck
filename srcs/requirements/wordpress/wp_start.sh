@@ -10,9 +10,9 @@ then
 	wp --allow-root core install --path=${WP_PATH} --url=${MY_URL} --title="${TITLE}" --admin_user=${MYSQL_USER} --admin_password=${MYSQL_PASSWORD} --admin_email=wluong@student.42.fr
 
 	# add user ogenser hehe oscar ma boy
-	wp --path=$WP_PATH --allow-root user create ogenser ogenser@student.42.fr --role=author --user_pass=ogenser
+	wp --path=${WP_PATH} --allow-root user create ogenser ogenser@student.42.fr --role=author --user_pass=ogenser
 	# add user lbetranc leti <3
-	wp --path=$WP_PATH --allow-root user create lbetranc lbetranc@student.42.fr --role=author --user_pass=lbetranc
+	wp --path=${WP_PATH} --allow-root user create lbetranc lbetranc@student.42.fr --role=author --user_pass=lbetranc
 fi
 
 php-fpm7.3 -F
