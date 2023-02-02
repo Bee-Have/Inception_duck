@@ -5,9 +5,9 @@ RUN apt-get -y update && apt-get -y upgrade && apt-get -y install mariadb-server
 RUN apt-get -y update && apt-get -y upgrade && apt-get -y install procps
 
 RUN rm -rf /var/lib/mysql
-RUN mkdir -p /run/mysqld /var/lib/mysql
-RUN chown -R mysql:mysql /run/mysqld/ /var/lib/mysql/
-RUN chmod 777 -R /run/mysqld /var/lib/mysql
+RUN mkdir -p /var/run/mysqld /var/lib/mysql
+RUN chown -R mysql:mysql /var/run/mysqld/ /var/lib/mysql/
+RUN chmod 777 -R /var/run/mysqld /var/lib/mysql
 
 COPY db-server.cnf /etc/mysql/my.cnf
 COPY mysql_setup.sh /home/script/mysql_setup.sh

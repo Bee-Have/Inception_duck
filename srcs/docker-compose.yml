@@ -50,6 +50,8 @@ services:
       - '8080:8080'
     volumes:
       - ./wordpress_volume:/var/www/html
+    depends_on:
+      - mysql
     links:
       - wordpress
     networks:

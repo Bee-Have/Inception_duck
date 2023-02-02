@@ -14,18 +14,19 @@ RUN chmod 755 /usr/bin/wp
 RUN mkdir -p /run/php
 
 RUN mkdir -p /var/log/php-fpm /var/www/html
+COPY wp-config.php /var/www/html/wp-config.php
 RUN wp --path=/var/www/html --allow-root core download
 
 RUN adduser --system --shell /bin/bash --gecos "nginx" --group --disabled-password nginx
 
-RUN chown -R nginx:nginx /var/www/
+RUN chown -R nginx:nginx /var/www/html
 
 RUN service php7.3-fpm start
 
-COPY www.conf /etc/php/7.3/fpm/pool.d/www.conf
 COPY wp_start.sh /run/php/wp_start.sh
+COPY www.conf /etc/php/7.3/fpm/pool.d/www.conf
 RUN chmod 777 /run/php/wp_start.sh
 
 EXPOSE 9000
 
-ENTRYPOINT [ "bash", "/run/php/wp_start.sh" ]
+ENTRYPOINT [ "/bin/bash", "/run/php/wp_start.sh" ]
