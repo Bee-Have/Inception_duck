@@ -2,18 +2,10 @@
 
 if [ ! -f ${MYSQL_PATH}/mysql_initialized ]; then
 
-	mysql_install_db --user=mysql --datadir=${MYSQL_PATH} --basedir=/usr --rpm > /dev/null
+	mysql_install_db --user=root --datadir=${MYSQL_PATH} --basedir=/usr --rpm > /dev/null
 	mysqld_safe &
 
 	sleep 2
-	# MYSQL_UP=0
-	# while [ $MYSQL_UP -eq 0 ]; do
-	# 	sleep 5
-	# 	ps aux | grep -v "grep" | grep "mysqld_safe"
-	# 	if [ $? -eq 0 ]; then
-	# 		MYSQL_UP=1
-	# 	fi
-	# done
 
 	touch tmpfile
 	chmod 777 tmpfile
@@ -26,7 +18,7 @@ DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 ALTER USER 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
-CREATE DATABASE ${MYSQL_DATABASE};
+CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
 CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
 GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_USER}'@'%';
 FLUSH PRIVILEGES;
@@ -42,5 +34,5 @@ fi
 
 sleep 1
 
-# service mysql start
-exec /usr/sbin/mysqld --user=root
+# service mysql restart
+exec /usr/sbin/mysqld --datadir=${MYSQL_PATH} --user=root
