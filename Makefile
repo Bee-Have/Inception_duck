@@ -20,7 +20,7 @@ clean:
 	sudo rm -rf $(DIR_MYSQL)
 
 re: clean
-	docker-compose up --build --force-recreate -d
+	cd srcs && docker-compose up --build --force-recreate -d
 
 fclean: clean
 	docker system prune -a
