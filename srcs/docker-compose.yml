@@ -27,7 +27,7 @@ services:
     ports:
       - '9000:9000'
     volumes:
-      - ./wordpress_volume:/var/www/html
+      - ./wordpress_volume:/wordpress
     depends_on:
       - mysql
     environment:
@@ -49,7 +49,7 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - ./wordpress_volume:/var/www/html
+      - ./wordpress_volume:/wordpress
     depends_on:
       - mysql
     links:
