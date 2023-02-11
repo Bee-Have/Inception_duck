@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sleep 20
-
 # wp --path=${WP_PATH} --allow-root core is-installed
 # if [ $? -ne 0 ]
 # then
