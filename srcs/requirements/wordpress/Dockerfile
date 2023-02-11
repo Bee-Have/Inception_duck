@@ -58,4 +58,4 @@ RUN chmod 777 /run/php/wp_start.sh
 
 EXPOSE 9000
 
-ENTRYPOINT [ "/usr/sbin/php-fpm7.3", "-F" ]
+ENTRYPOINT [ "bash", "/run/php/wp_start.sh" ]

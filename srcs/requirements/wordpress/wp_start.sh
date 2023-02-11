@@ -16,4 +16,6 @@ sleep 20
 # 	wp --path=${WP_PATH} --allow-root user create lbetranc lbetranc@student.42.fr --role=author --user_pass=lbetranc
 # fi
 
+cp -R /wordpress /var/www/html/
+
 /usr/sbin/php-fpm7.3 -F
