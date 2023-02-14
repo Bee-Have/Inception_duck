@@ -23,14 +23,15 @@
 define( 'DB_NAME', getenv('MYSQL_DATABASE') );
 
 /** Database username */
-define( 'DB_USER', getenv('MYSQL_USER') );
+define( 'DB_USER', getenv('MYSQL_ADMIN_USER') );
 
 /** Database password */
-define( 'DB_PASSWORD', getenv('MYSQL_PASSWORD') );
+define( 'DB_PASSWORD', getenv('MYSQL_ADMIN_PASSWORD') );
 
 /** Database hostname */
-define( 'DB_HOST', getenv('DB_HOST') . ':3306' );
-// define( 'DB_HOST', getenv('DB_HOST') );
+// define( 'DB_HOST', 'localhost' );
+// define( 'DB_HOST', getenv('DB_HOST') . ':3306' );
+define( 'DB_HOST', getenv('DB_HOST') );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
@@ -83,8 +84,8 @@ $table_prefix = 'wp_';
 define( 'WP_DEBUG', false );
 
 /* Add any custom values between this line and the "stop editing" line. */
-
-
+define( 'WP_ALLOW_REPAIR', true);
+// define( "CONCATENATE_SCRIPTS", false);
 
 /* That's all, stop editing! Happy publishing. */
 

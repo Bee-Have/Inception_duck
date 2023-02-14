@@ -39,23 +39,64 @@ LABEL maintainer="amarini-@student.42.fr"
 # RUN service php7.3-fpm start
 
 
+# RUN apt-get -y update && apt-get -y upgrade
+# RUN apt autoremove && apt-get -y install wget mariadb-client
+# RUN apt-get -y install php7.3-fpm php7.3-mysqli php7.3-mbstring php7.3-pdo php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip
+
+# RUN wget https://wordpress.org/latest.tar.gz
+# RUN tar -xzvf latest.tar.gz
+# RUN rm latest.tar.gz
+# # RUN chmod 777 -R /wordpress/
+# RUN mkdir -p /var/log/php-fpm
+# COPY wp-config.php /wordpress/wp-config.php
+# RUN adduser --system --shell /bin/bash --gecos "nginx" --group --disabled-password nginx
+
+# RUN chown -R nginx:nginx /wordpress/
+# COPY wp_start.sh /run/php/wp_start.sh
+# COPY www.conf /etc/php/7.3/fpm/pool.d/www.conf
+# RUN chmod 777 /run/php/wp_start.sh
+
+# EXPOSE 9000
+
+# ENTRYPOINT [ "bash", "/run/php/wp_start.sh" ]
+
+ARG MYSQL_DATABASE
+ARG MYSQL_ADMIN_USER
+ARG MYSQL_ADMIN_PASSWORD
+ARG DB_HOST
+ARG MYSQL_USER
+ARG WP_PATH
+
 RUN apt-get -y update && apt-get -y upgrade
-RUN apt autoremove && apt-get -y install wget mariadb-client
-RUN apt-get -y install php7.3-fpm php7.3-mysqli php7.3-mbstring php7.3-pdo php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip
+RUN apt-get -y install curl
+RUN apt-get -y install mariadb-client
+RUN apt-get -y install php7.3-fpm php7.3-mysqli
 
-RUN wget https://wordpress.org/latest.tar.gz
-RUN tar -xzvf latest.tar.gz
-RUN rm latest.tar.gz
-# RUN chmod 777 -R /wordpress/
-RUN mkdir -p /var/log/php-fpm
-COPY wp-config.php /wordpress/wp-config.php
-RUN adduser --system --shell /bin/bash --gecos "nginx" --group --disabled-password nginx
+COPY php-fpm.conf /etc/php/7.3/fpm/php-fpm.conf
+COPY www.conf /etc/php/7.3/fpm/www.conf
 
-RUN chown -R nginx:nginx /wordpress/
-COPY wp_start.sh /run/php/wp_start.sh
-COPY www.conf /etc/php/7.3/fpm/pool.d/www.conf
-RUN chmod 777 /run/php/wp_start.sh
+RUN mkdir -p /run/php/
 
-EXPOSE 9000
+RUN useradd -ms /bin/bash www
+RUN usermod -a -G www www
 
-ENTRYPOINT [ "bash", "/run/php/wp_start.sh" ]
+RUN mkdir -p /var/www/
+RUN chown -R www:www /var/www
+
+RUN useradd -ms /bin/bash ${MYSQL_ADMIN_USER}
+RUN usermod -a -G sudo ${MYSQL_ADMIN_USER}
+RUN useradd ${MYSQL_USER}
+RUN usermod -a -G users ${MYSQL_USER}
+
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN php wp-cli.phar --info
+RUN chmod +x wp-cli.phar
+RUN mv wp-cli.phar /usr/local/bin/wp
+RUN chown -R www:www /usr/local/bin/wp
+
+WORKDIR /var/www/
+RUN rm -rf /var/www/wp-config.php
+RUN wp core download --allow-root
+RUN wp config create --dbname=${MYSQL_DATABASE} --dbuser=${MYSQL_ADMIN_USER} --dbpass=${MYSQL_ADMIN_PASSWORD} --dbhost=${DB_HOST} --dbcharset=utf8 --path=${WP_PATH} --allow-root --skip-check
+
+WORKDIR /

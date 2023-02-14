@@ -19,8 +19,8 @@
 	# mysql -u root -p$MYSQL_ROOT_PASSWORD -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
 	# mysql -u root -p$MYSQL_ROOT_PASSWORD -e "ALTER USER IF EXISTS 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';"
 	# mysql -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};"
-	# mysql -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
-	# mysql -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_USER}'@'%';"
+	# mysql -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE USER IF NOT EXISTS '${MYSQL_ADMIN_USER}'@'%' IDENTIFIED BY '${MYSQL_ADMIN_PASSWORD}';"
+	# mysql -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_ADMIN_USER}'@'%';"
 	# mysql -u root -p$MYSQL_ROOT_PASSWORD -e "FLUSH PRIVILEGES;"
 # EOF
 	# mysql -u root -p$MYSQL_ROOT_PASSWORD < tmpfile
@@ -39,16 +39,17 @@ mysqld_safe &
 
 sleep 2
 
-# mysql -u mysql -e "USE mysql;"
+mysql -u mysql -e "USE mysql;"
 # mysql -u mysql -e "FLUSH PRIVILEGES;"
 # mysql -u mysql -e "DELETE FROM mysql.user WHERE User='';"
-mysql -u root -e "CREATE DATABASE ${MYSQL_DATABASE};"
-mysql -u root -e "CREATE USER '${MYSQL_USER}'@'localhost';"
-mysql -u root -e "SET password FOR '${MYSQL_USER}'@'localhost' = password('${MYSQL_PASSWORD}');"
-mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_USER}'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+mysql -u root -e "DROP DATABASE IF EXISTS test;"
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};"
+mysql -u root -e "CREATE USER IF NOT EXISTS '${MYSQL_ADMIN_USER}' IDENTIFIED BY '${MYSQL_ADMIN_PASSWORD}';"
+mysql -u root -e "SET password FOR '${MYSQL_ADMIN_USER}'@'localhost' = password('${MYSQL_ADMIN_PASSWORD}');"
+mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_ADMIN_USER}'@'localhost' IDENTIFIED BY '${MYSQL_ADMIN_PASSWORD}' WITH GRANT OPTION;"
 mysql -u root -e "FLUSH PRIVILEGES;"
 
 mysqladmin -uroot shutdown
 
 # service mysql restart
-exec /usr/sbin/mysqld --user=root
+exec /usr/sbin/mysqld --datadir=${MYSQL_PATH} --user=root

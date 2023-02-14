@@ -13,7 +13,7 @@ logs:
 	cd srcs && docker-compose logs
 
 clean:
-	cd srcs && docker-compose down -v
+	cd srcs && docker-compose down -v --remove-orphans
 	sudo rm -rf $(VOLUME_WP)
 	sudo rm -rf $(VOLUME_MYSQL)
 	sudo rm -rf $(DIR_WP)

@@ -2,26 +2,37 @@ version : '3'
 
 services:
 
-  mysql:
-    build: ./requirements/mariadb
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+      args:
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_ADMIN_USER=${MYSQL_ADMIN_USER}
+        - MYSQL_ADMIN_PASSWORD=${MYSQL_ADMIN_PASSWORD}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     container_name: mariadb
     image: mariadb
     ports:
       - '3306:3306'
     volumes:
       - ./mysql_volume:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_PATH: ${MYSQL_PATH}
     networks:
       - amarini-network
     restart: always
 
   wordpress:
-    build: ./requirements/wordpress
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+      args:
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_ADMIN_USER=${MYSQL_ADMIN_USER}
+        - MYSQL_ADMIN_PASSWORD=${MYSQL_ADMIN_PASSWORD}
+        - DB_HOST=${DB_HOST}
+        - MYSQL_USER=${MYSQL_USER}
+        - WP_PATH=${WP_PATH}
     container_name: wordpress
     image: wordpress
     ports:
@@ -29,15 +40,7 @@ services:
     volumes:
       - ./wordpress_volume:/var/www/html
     depends_on:
-      - mysql
-    environment:
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      WP_PATH: ${WP_PATH}
-      URL: ${URL}
-      DB_HOST: ${DB_HOST}
-      TITLE: ${TITLE}
+      - mariadb
     networks:
       - amarini-network
     restart: always
@@ -51,8 +54,6 @@ services:
     volumes:
       - ./wordpress_volume:/var/www/html
     depends_on:
-      - mysql
-    links:
       - wordpress
     networks:
       - amarini-network
