@@ -3,6 +3,8 @@ version : '3'
 services:
 
   mariadb:
+    container_name: mariadb
+    image: mariadb
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
@@ -12,17 +14,17 @@ services:
         - MYSQL_ADMIN_PASSWORD=${MYSQL_ADMIN_PASSWORD}
         - MYSQL_USER=${MYSQL_USER}
         - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    container_name: mariadb
-    image: mariadb
     ports:
       - '3306:3306'
     volumes:
-      - ./mysql_volume:/var/lib/mysql
+      - ./mysql_volume:/var/db
     networks:
-      - amarini-network
+      - backend
     restart: always
 
   wordpress:
+    container_name: wordpress
+    image: wordpress
     build:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
@@ -33,45 +35,46 @@ services:
         - DB_HOST=${DB_HOST}
         - MYSQL_USER=${MYSQL_USER}
         - WP_PATH=${WP_PATH}
-    container_name: wordpress
-    image: wordpress
     ports:
       - '9000:9000'
     volumes:
-      - ./wordpress_volume:/var/www/html
+      - ./wordpress_volume:/var/www
     depends_on:
       - mariadb
     networks:
-      - amarini-network
+      - frontend
+      - backend
+    command: bash -c "/run/wp_start.sh && exec bash"
     restart: always
 
   nginx:
-    build: ./requirements/nginx
     container_name: nginx
     image: nginx
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
     ports:
       - '8080:8080'
     volumes:
-      - ./wordpress_volume:/var/www/html
+      - ./wordpress_volume:/var/www
     depends_on:
       - wordpress
     networks:
-      - amarini-network
+      - frontend
     restart: unless-stopped
 
 networks:
-  amarini-network:
+  frontend:
+  backend:
 
 volumes:
   mysql_volume:
-    driver: local
     driver_opts:
       type: none
-      device: ${MYSQL_VOLUME_PATH}
+      device: "$HOME/data/mysql"
       o: bind
   wordpress_volume:
-    driver: local
     driver_opts:
       type: none
-      device: ${WP_VOLUME_PATH}
+      device: "$HOME/data/html"
       o: bind

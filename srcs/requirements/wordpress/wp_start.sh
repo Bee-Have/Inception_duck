@@ -20,5 +20,5 @@
 
 # /usr/sbin/php-fpm7.3 -F
 
-wp core install --path=$WP_PATH --url=localhost --admin_name=$MYSQL_ADMIN_USER --admin_password=$MYSQL_ADMIN_PASSWORD --allow-root --skip-email
+wp core install --path=/var/www --url=$URL --title=$TITLE --admin_name=$MYSQL_ADMIN_USER --admin_password=$MYSQL_ADMIN_PASSWORD --allow-root --skip-email
 /usr/sbin/php-fpm7.3 -F -R

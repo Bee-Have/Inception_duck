@@ -1,5 +1,5 @@
-DIR_WP = /home/amarini-/data/html
-DIR_MYSQL = /home/amarini-/data/mysql
+DIR_WP = $(HOME)/data/html
+DIR_MYSQL = $(HOME)/data/mysql
 
 VOLUME_WP = srcs/wordpress_volume
 VOLUME_MYSQL = srcs/mysql_volume
