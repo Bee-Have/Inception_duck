@@ -24,6 +24,7 @@
 
 wp core download --path=/var/www --allow-root
 wp config create --path=/var/www --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_ADMIN_USER --dbpass=$MYSQL_ADMIN_PASSWORD --dbhost=$DB_HOST --dbcharset=utf8 --allow-root --skip-check
+# cp /tmp/wp-config.php /var/www/wp-config.php
 wp core install --path=/var/www --url=$URL --title=$TITLE --admin_name=$MYSQL_ADMIN_USER --admin_password=$MYSQL_ADMIN_PASSWORD --allow-root --skip-email
 
 /usr/sbin/php-fpm7.3 -F -R

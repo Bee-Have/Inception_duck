@@ -39,6 +39,13 @@ services:
       - '9000:9000'
     volumes:
       - ./wordpress_volume:/var/www
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ADMIN_USER: ${MYSQL_ADMIN_USER}
+      MYSQL_ADMIN_PASSWORD: ${MYSQL_ADMIN_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      WP_PATH: ${WP_PATH}
+      DB_HOST: ${DB_HOST}
     depends_on:
       - mariadb
     networks:

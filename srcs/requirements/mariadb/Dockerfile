@@ -14,10 +14,10 @@ COPY db-server.cnf /etc/mysql/my.cnf
 RUN mysql_install_db --datadir=/var/lib/mysql --user=mysql
 
 RUN service mysql start && \
-	echo "USE mysql;" | mysql -u root && \
-	echo "FLUSH PRIVILEGES;" | mysql -u root && \
-	echo "DELETE FROM mysql.user WHERE User='';" | mysql -u root && \
-	echo "DROP DATABASE IF EXISTS test;" | mysql -u root && \
+	# echo "USE mysql;" | mysql -u root && \
+	# echo "FLUSH PRIVILEGES;" | mysql -u root && \
+	# echo "DELETE FROM mysql.user WHERE User='';" | mysql -u root && \
+	# echo "DROP DATABASE IF EXISTS test;" | mysql -u root && \
 	echo "CREATE DATABASE $MYSQL_DATABASE;" | mysql -u root && \
 	echo "CREATE USER '$MYSQL_ADMIN_USER'@'*';" | mysql -u root && \
 	echo "SET password FOR '$MYSQL_ADMIN_USER'@'*' = password('$MYSQL_ADMIN_PASSWORD');" | mysql -u root && \
@@ -31,8 +31,6 @@ RUN service mysql start && \
 	echo "REPAIR TABLE mysql.user;" | mysql -u root && \
 	echo "REPAIR TABLE mysql.db;" | mysql -u root && \
 	echo "FLUSH PRIVILEGES;" | mysql -u root
-
-# RUN mysqlcheck -u root --repair --extended ${MYSQL_DATABASE}
 
 EXPOSE 3306
 

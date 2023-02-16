@@ -73,7 +73,7 @@ RUN apt-get -y install mariadb-client
 RUN apt-get -y install php7.3-fpm php7.3-mysqli
 
 COPY php-fpm.conf /etc/php/7.3/fpm/php-fpm.conf
-COPY www.conf /etc/php/7.3/fpm/www.conf
+COPY test.conf /etc/php/7.3/fpm/test.conf
 RUN mkdir -p /run/php/
 
 RUN useradd -ms /bin/bash www
@@ -95,9 +95,9 @@ RUN chown -R www:www /usr/local/bin/wp
 
 WORKDIR /var/www/
 RUN rm -rf /var/www/wp-config.php
-# COPY wp-config.php /var/www/wp-config.php
-RUN wp core download --path=/var/www --allow-root && \
-	wp config create --path=/var/www --dbname=${MYSQL_DATABASE} --dbuser=${MYSQL_ADMIN_USER} --dbpass=${MYSQL_ADMIN_PASSWORD} --dbhost=${DB_HOST} --dbcharset=utf8 --allow-root --skip-check
+# COPY wp-config.php /tmp/wp-config.php
+# RUN wp core download --path=/var/www --allow-root && \
+# 	wp config create --path=/var/www --dbname=${MYSQL_DATABASE} --dbuser=${MYSQL_ADMIN_USER} --dbpass=${MYSQL_ADMIN_PASSWORD} --dbhost=${DB_HOST} --dbcharset=utf8 --allow-root --skip-check
 
 WORKDIR /
 
