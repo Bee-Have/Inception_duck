@@ -73,7 +73,7 @@ RUN apt-get -y install mariadb-client
 RUN apt-get -y install php7.3-fpm php7.3-mysqli
 
 COPY php-fpm.conf /etc/php/7.3/fpm/php-fpm.conf
-COPY test.conf /etc/php/7.3/fpm/test.conf
+COPY amarini.conf /etc/php/7.3/fpm/amarini.conf
 RUN mkdir -p /run/php/
 
 RUN useradd -ms /bin/bash www
