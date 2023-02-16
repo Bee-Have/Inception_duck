@@ -29,8 +29,6 @@ define( 'DB_USER', getenv('MYSQL_ADMIN_USER') );
 define( 'DB_PASSWORD', getenv('MYSQL_ADMIN_PASSWORD') );
 
 /** Database hostname */
-// define( 'DB_HOST', 'localhost' );
-// define( 'DB_HOST', getenv('DB_HOST') . ':3306' );
 define( 'DB_HOST', getenv('DB_HOST') );
 
 /** Database charset to use in creating database tables. */

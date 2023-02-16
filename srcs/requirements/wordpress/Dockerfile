@@ -95,8 +95,9 @@ RUN chown -R www:www /usr/local/bin/wp
 
 WORKDIR /var/www/
 RUN rm -rf /var/www/wp-config.php
-# RUN wp core download --path=/var/www --allow-root && \
-# 	wp config create --path=/var/www --dbname=${MYSQL_DATABASE} --dbuser=${MYSQL_ADMIN_USER} --dbpass=${MYSQL_ADMIN_PASSWORD} --dbhost=${DB_HOST} --dbcharset=utf8 --extra-php << "define( 'WP_ALLOW_REPAIR', true);" --allow-root --skip-check
+# COPY wp-config.php /var/www/wp-config.php
+RUN wp core download --path=/var/www --allow-root && \
+	wp config create --path=/var/www --dbname=${MYSQL_DATABASE} --dbuser=${MYSQL_ADMIN_USER} --dbpass=${MYSQL_ADMIN_PASSWORD} --dbhost=${DB_HOST} --dbcharset=utf8 --allow-root --skip-check
 
 WORKDIR /
 
