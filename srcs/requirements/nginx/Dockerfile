@@ -15,17 +15,25 @@ RUN mkdir -p /run/nginx
 
 RUN mkdir -p /etc/nginx/ssl
 WORKDIR /etc/nginx/ssl
-RUN openssl req -x509 -out amarini-.crt -keyout amarini-.key -newkey rsa:2048 -nodes -sha256 -subj "/C=FR/ST=Paris/L=Paris/O=42 School/OU=amarini-/CN=amarini-/distinguished_name=dn/subjectAltName=DNS:amarini-.42.fr/keyUsage=digitalSignature/extendedKeyUsage=serverAuth"
+RUN openssl req -x509 -out amarini-.crt -keyout amarini-.key -newkey rsa:2048 -nodes -sha256 -subj "/C=FR/ST=Paris/L=Paris/O=42 School/OU=amarini-/CN=amarini-/distinguished_name=dn/subjectAltName=DNS:localhost/keyUsage=digitalSignature/extendedKeyUsage=serverAuth"
 RUN chmod 600 amarini-.crt
 RUN chmod 600 amarini-.key
-# RUN mkdir -p /etc/nginx/etc/ssl/certs/ && mkdir -p /etc/nginx/etc/ssl/private/
-# RUN openssl req -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=FR/ST=75/L=Paris/O=42Paris/OU=amarini/CN=localhost" -keyout ssl-cert-snakeoil.key -out ssl-cert-snakeoil.pem
-# RUN mv ssl-cert-snakeoil.pem /etc/nginx/etc/ssl/certs/ && mv ssl-cert-snakeoil.key /etc/nginx/etc/ssl/private/
-# RUN chmod 600 /etc/nginx/etc/ssl/certs/ssl-cert-snakeoil.pem && chmod 600 /etc/nginx/etc/ssl/private/ssl-cert-snakeoil.key
+
+# RUN mkdir -p /etc/ssl/certs/ && mkdir -p /etc/ssl/private/
+# RUN openssl req -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=FR/ST=75/L=Paris/O=42Paris/OU=amarini-/CN=localhost" -keyout ssl-cert-snakeoil.key -out ssl-cert-snakeoil.pem
+# RUN mv ssl-cert-snakeoil.pem /etc/ssl/certs/ && mv ssl-cert-snakeoil.key /etc/ssl/private/
+# RUN cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/
+# RUN chmod 600 /etc/ssl/certs/ssl-cert-snakeoil.pem && chmod 600 /etc/ssl/private/ssl-cert-snakeoil.key
+
+COPY nginx.conf /etc/nginx/sites-available/localhost
+
+RUN ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled
 
 WORKDIR /
 
-COPY nginx.conf /etc/nginx/nginx.conf
+# COPY nginx.conf /etc/nginx/nginx.conf
+# COPY nginx.conf /etc/nginx/conf.d/nginx.conf
+# COPY nginx.conf /etc/nginx/sites-enabled/000-default.conf
 
 EXPOSE 443
 # EXPOSE 8080
