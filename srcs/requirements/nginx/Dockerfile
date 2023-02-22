@@ -1,5 +1,7 @@
 FROM debian:buster
 
+ARG DOMAIN
+
 RUN apt-get -y update && apt-get -y upgrade && apt-get -y install nginx
 
 # COPY nginx.conf /etc/nginx/sites-available/default
@@ -15,7 +17,7 @@ RUN mkdir -p /run/nginx
 
 RUN mkdir -p /etc/nginx/ssl
 WORKDIR /etc/nginx/ssl
-RUN openssl req -x509 -out amarini-.crt -keyout amarini-.key -newkey rsa:2048 -nodes -sha256 -subj "/C=FR/ST=Paris/L=Paris/O=42 School/OU=amarini-/CN=amarini-/distinguished_name=dn/subjectAltName=DNS:localhost/keyUsage=digitalSignature/extendedKeyUsage=serverAuth"
+RUN openssl req -x509 -out amarini-.crt -keyout amarini-.key -newkey rsa:2048 -nodes -sha256 -subj "/C=FR/ST=Paris/L=Paris/O=42 School/OU=amarini-/CN=amarini-/distinguished_name=dn/subjectAltName=DNS:${DOMAIN}/keyUsage=digitalSignature/extendedKeyUsage=serverAuth"
 RUN chmod 600 amarini-.crt
 RUN chmod 600 amarini-.key
 
@@ -25,9 +27,9 @@ RUN chmod 600 amarini-.key
 # RUN cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/
 # RUN chmod 600 /etc/ssl/certs/ssl-cert-snakeoil.pem && chmod 600 /etc/ssl/private/ssl-cert-snakeoil.key
 
-COPY nginx.conf /etc/nginx/sites-available/localhost
+COPY nginx.conf /etc/nginx/sites-available/${DOMAIN}
 
-RUN ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled
+RUN ln -s /etc/nginx/sites-available/${DOMAIN} /etc/nginx/sites-enabled
 
 WORKDIR /
 
