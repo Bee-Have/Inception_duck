@@ -4,10 +4,16 @@ DIR_MYSQL = $(HOME)/data/mysql
 VOLUME_WP = srcs/wordpress_volume
 VOLUME_MYSQL = srcs/mysql_volume
 
-all:
-	sudo mkdir -p $(DIR_WP)
+SETUP = .finished
+
+all: $(SETUP) build
+
+build:
 	sudo mkdir -p $(DIR_MYSQL)
 	cd srcs && docker-compose up --build -d
+
+$(SETUP):
+	$(shell bash inception_setup.sh)
 
 logs:
 	cd srcs && docker-compose logs
@@ -24,5 +30,7 @@ re: clean
 
 fclean: clean
 	docker system prune -a
+	$(shell sed -i.bak '/amarini-.42.fr/d' /etc/hosts)
+	rm -f $(SETUP)
 
-.PHONY: all logs clean re fclean
+.PHONY: all build logs clean re fclean
