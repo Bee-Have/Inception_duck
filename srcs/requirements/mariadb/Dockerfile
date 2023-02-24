@@ -15,10 +15,6 @@ COPY wp_site_db.sql /var/lib/mysql/wp_site_db.sql
 RUN mysql_install_db --datadir=/var/lib/mysql --user=mysql
 
 RUN service mysql start && \
-	# echo "USE mysql;" | mysql -u root && \
-	# echo "FLUSH PRIVILEGES;" | mysql -u root && \
-	# echo "DELETE FROM mysql.user WHERE User='';" | mysql -u root && \
-	# echo "DROP DATABASE IF EXISTS test;" | mysql -u root && \
 	echo "CREATE DATABASE $MYSQL_DATABASE;" | mysql -u root && \
 	echo "CREATE USER '$MYSQL_ADMIN_USER'@'*';" | mysql -u root && \
 	echo "SET password FOR '$MYSQL_ADMIN_USER'@'*' = password('$MYSQL_ADMIN_PASSWORD');" | mysql -u root && \
@@ -37,30 +33,3 @@ RUN service mysql start && \
 EXPOSE 3306
 
 CMD [ "mysqld" ]
-
-# RUN apt-get -y update && apt-get -y upgrade && apt-get -y install aptitude
-# RUN apt-get remove -y --purge *mysql*
-# RUN apt-get remove -y --purge *mariadb*
-# RUN rm -rf /var/lib/mysql
-# RUN rm -rf /etc/mysql
-# RUN apt-get autoremove
-# RUN apt-get autoclean
-
-# RUN apt-get -y update && apt-get -y upgrade && apt-get -y install mariadb-server mariadb-client
-
-# RUN apt-get -y update && apt-get -y upgrade && apt-get -y install procps
-
-# # RUN rm -rf /var/lib/mysql
-# RUN mkdir -p /var/run/mysqld /var/lib/mysql
-# RUN chown -R mysql:mysql /var/run/mysqld/ /var/lib/mysql/
-# RUN chmod 777 -R /var/run/mysqld /var/lib/mysql
-
-# COPY db-server.cnf /etc/mysql/my.cnf
-# COPY mysql_setup.sh /home/script/mysql_setup.sh
-
-# RUN chown -R mysql:mysql /etc/mysql
-# RUN chmod 777 /home/script/mysql_setup.sh
-
-# EXPOSE 3306
-
-# ENTRYPOINT [ "sh", "/home/script/mysql_setup.sh" ]
