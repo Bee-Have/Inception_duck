@@ -10,9 +10,9 @@ RUN apt-get -y update && apt-get -y upgrade
 RUN apt-get -y install mariadb-server
 
 COPY db-server.cnf /etc/mysql/my.cnf
-COPY wp_site_db.sql /var/lib/mysql/wp_site_db.sql
+COPY wp_site_db.sql /var/db/wp_site_db.sql
 
-RUN mysql_install_db --datadir=/var/lib/mysql --user=mysql
+RUN mysql_install_db --datadir=/var/db --user=mysql
 
 RUN service mysql start && \
 	echo "CREATE DATABASE $MYSQL_DATABASE;" | mysql -u root && \
@@ -28,7 +28,7 @@ RUN service mysql start && \
 	echo "REPAIR TABLE mysql.user;" | mysql -u root && \
 	echo "REPAIR TABLE mysql.db;" | mysql -u root && \
 	echo "FLUSH PRIVILEGES;" | mysql -u root && \
-	mysql -u root ${MYSQL_DATABASE} < /var/lib/mysql/wp_site_db.sql
+	mysql -u root ${MYSQL_DATABASE} < /var/db/wp_site_db.sql
 
 EXPOSE 3306
 

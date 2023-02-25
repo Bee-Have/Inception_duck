@@ -17,7 +17,7 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - ./mysql_volume:/var/db
+      - $HOME/data/mariadb:/var/db
     networks:
       - backend
     restart: always
@@ -38,7 +38,7 @@ services:
     ports:
       - '9000:9000'
     volumes:
-      - ./wordpress_volume:/var/www
+      - $HOME/data/wordpress:/var/www
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_ADMIN_USER: ${MYSQL_ADMIN_USER}
@@ -66,7 +66,7 @@ services:
       - '80:80'
       - '443:443'
     volumes:
-      - ./wordpress_volume:/var/www
+      - $HOME/data/wordpress:/var/www
     depends_on:
       - wordpress
     networks:
@@ -76,15 +76,3 @@ services:
 networks:
   frontend:
   backend:
-
-volumes:
-  mysql_volume:
-    driver_opts:
-      type: none
-      device: "$HOME/data/mysql"
-      o: bind
-  wordpress_volume:
-    driver_opts:
-      type: none
-      device: "$HOME/data/html"
-      o: bind
