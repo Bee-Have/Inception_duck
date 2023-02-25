@@ -51,7 +51,7 @@ services:
     networks:
       - frontend
       - backend
-    command: bash -c "/run/wp_start.sh && exec bash"
+    command: bash -c "/run/wp_start.sh"
     restart: always
 
   nginx:
