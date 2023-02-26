@@ -24,9 +24,9 @@ then
 fi
 
 # check if apache is installed
-if type apache &> /dev/null;
+if type apache2 &> /dev/null;
 then
-	sudo apt-get purge apache2
+	sudo apt-get -y purge apache2
 	sudo apt-get -y autoremove
 	sudo rm -rf /etc/apache2
 fi
