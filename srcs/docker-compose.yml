@@ -14,10 +14,11 @@ services:
         - MYSQL_ADMIN_PASSWORD=${MYSQL_ADMIN_PASSWORD}
         - MYSQL_USER=${MYSQL_USER}
         - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - MYSQL_PATH=${MYSQL_PATH}
     ports:
       - '3306:3306'
     volumes:
-      - $HOME/data/mariadb:/var/db
+      - mariadb_volume:${MYSQL_PATH}
     networks:
       - backend
     restart: always
@@ -38,7 +39,7 @@ services:
     ports:
       - '9000:9000'
     volumes:
-      - $HOME/data/wordpress:/var/www
+      - wordpress_volume:${WP_PATH}
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_ADMIN_USER: ${MYSQL_ADMIN_USER}
@@ -62,11 +63,12 @@ services:
       dockerfile: Dockerfile
       args:
         - DOMAIN=${DOMAIN}
+        - WP_PATH=${WP_PATH}
     ports:
       - '80:80'
       - '443:443'
     volumes:
-      - $HOME/data/wordpress:/var/www
+      - wordpress_volume:${WP_PATH}
     depends_on:
       - wordpress
     networks:
@@ -76,3 +78,17 @@ services:
 networks:
   frontend:
   backend:
+
+volumes:
+  wordpress_volume:
+    driver: 'local'
+    driver_opts:
+      type: 'none'
+      device: '${WP_VOLUME}'
+      o: 'bind'
+  mariadb_volume:
+    driver: 'local'
+    driver_opts:
+      type: 'none'
+      device: '${MYSQL_VOLUME}'
+      o: 'bind'

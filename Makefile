@@ -1,8 +1,13 @@
 SETUP = .finished
 
+MARIADB_VOLUME = /home/amarini-/data/mysql
+WORDPRESS_VOLUME = /home/amarini-/data/html
+
 all: $(SETUP) build
 
 build:
+	sudo mkdir -p $(MARIADB_VOLUME)
+	sudo mkdir -p $(WORDPRESS_VOLUME)
 	cd srcs && docker-compose up -d
 
 $(SETUP):
@@ -12,17 +17,15 @@ logs:
 	cd srcs && docker-compose logs
 
 backup:
-	docker exec wordpress sh -c "wp --path=/var/www --allow-root db export wp_site_db.sql"
+	cd srcs && docker exec wordpress sh -c "wp --path=${WP_PATH} --allow-root db export wp_site_db.sql"
 	docker cp wordpress:/wp_site_db.sql ./srcs/requirements/mariadb/wp_site_db.sql
 
 clean:
 	cd srcs && docker-compose down --remove-orphans
 
-re: clean
-	cd srcs && docker-compose up -d
+re: clean build
 
-fclean:
-	cd srcs && docker-compose down -v --remove-orphans
+fclean: clean
 	docker system prune -a
 	$(shell sed -i.bak '/amarini-.42.fr/d' /etc/hosts)
 	rm -f $(SETUP)

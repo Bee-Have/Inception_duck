@@ -21,8 +21,8 @@ RUN mkdir -p /run/php/
 RUN useradd -ms /bin/bash www
 RUN usermod -a -G www www
 
-RUN mkdir -p /var/www/
-RUN chown -R www:www /var/www
+RUN mkdir -p ${WP_PATH}
+RUN chown -R www:www ${WP_PATH}
 
 RUN useradd -ms /bin/bash ${MYSQL_ADMIN_USER}
 RUN usermod -a -G sudo ${MYSQL_ADMIN_USER}
@@ -35,8 +35,8 @@ RUN chmod +x wp-cli.phar
 RUN mv wp-cli.phar /usr/local/bin/wp
 RUN chown -R www:www /usr/local/bin/wp
 
-WORKDIR /var/www/
-RUN rm -rf /var/www/wp-config.php
+WORKDIR ${WP_PATH}
+RUN rm -rf ${WP_PATH}/wp-config.php
 
 WORKDIR /
 

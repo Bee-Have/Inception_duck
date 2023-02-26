@@ -5,14 +5,17 @@ ARG MYSQL_ADMIN_USER
 ARG MYSQL_ADMIN_PASSWORD
 ARG MYSQL_USER
 ARG MYSQL_PASSWORD
+ARG MYSQL_PATH
 
 RUN apt-get -y update && apt-get -y upgrade
 RUN apt-get -y install mariadb-server
 
-COPY db-server.cnf /etc/mysql/my.cnf
-COPY wp_site_db.sql /var/db/wp_site_db.sql
+RUN mkdir -p ${MYSQL_PATH}
 
-RUN mysql_install_db --datadir=/var/db --user=mysql
+COPY db-server.cnf /etc/mysql/my.cnf
+COPY wp_site_db.sql ${MYSQL_PATH}/wp_site_db.sql
+
+RUN mysql_install_db --datadir=${MYSQL_PATH} --user=mysql
 
 RUN service mysql start && \
 	echo "CREATE DATABASE $MYSQL_DATABASE;" | mysql -u root && \
@@ -28,7 +31,7 @@ RUN service mysql start && \
 	echo "REPAIR TABLE mysql.user;" | mysql -u root && \
 	echo "REPAIR TABLE mysql.db;" | mysql -u root && \
 	echo "FLUSH PRIVILEGES;" | mysql -u root && \
-	mysql -u root ${MYSQL_DATABASE} < /var/db/wp_site_db.sql
+	mysql -u root ${MYSQL_DATABASE} < ${MYSQL_PATH}/wp_site_db.sql
 
 EXPOSE 3306
 

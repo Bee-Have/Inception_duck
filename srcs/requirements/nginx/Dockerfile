@@ -1,6 +1,7 @@
 FROM debian:buster
 
 ARG DOMAIN
+ARG WP_PATH
 
 RUN apt-get -y update && apt-get -y upgrade && apt-get -y install nginx
 
@@ -9,7 +10,7 @@ RUN apt-get -y update && apt-get -y install openssl
 RUN useradd www
 RUN usermod -a -G www www
 RUN chown -R www:www /var/lib/nginx
-RUN chown -R www:www /var/www
+RUN chown -R www:www ${WP_PATH}
 
 RUN mkdir -p /run/nginx
 
