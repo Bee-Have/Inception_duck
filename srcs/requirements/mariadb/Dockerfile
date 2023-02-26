@@ -1,6 +1,7 @@
 FROM debian:buster
 
 ARG MYSQL_DATABASE
+ARG MYSQL_ROOT_PASSWORD
 ARG MYSQL_ADMIN_USER
 ARG MYSQL_ADMIN_PASSWORD
 ARG MYSQL_USER
@@ -31,7 +32,9 @@ RUN service mysql start && \
 	echo "REPAIR TABLE mysql.user;" | mysql -u root && \
 	echo "REPAIR TABLE mysql.db;" | mysql -u root && \
 	echo "FLUSH PRIVILEGES;" | mysql -u root && \
-	mysql -u root ${MYSQL_DATABASE} < ${MYSQL_PATH}/wp_site_db.sql
+	echo "SET password FOR 'root'@'localhost' = password('$MYSQL_ROOT_PASSWORD');" | mysql -u root -p${MYSQL_ROOT_PASSWORD} && \
+	echo "FLUSH PRIVILEGES;" | mysql -uroot -p${MYSQL_ROOT_PASSWORD} && \
+	mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} < ${MYSQL_PATH}/wp_site_db.sql
 
 EXPOSE 3306
 
