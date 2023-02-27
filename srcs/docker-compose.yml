@@ -66,7 +66,6 @@ services:
         - DOMAIN=${DOMAIN}
         - WP_PATH=${WP_PATH}
     ports:
-      - '80:80'
       - '443:443'
     volumes:
       - wordpress_volume:${WP_PATH}
