@@ -11,7 +11,7 @@ build:
 	cd srcs && docker-compose up -d
 
 $(SETUP):
-	$(shell bash inception_setup.sh)
+	$(eval return:=$(shell bash inception_setup.sh))
 
 logs:
 	cd srcs && docker-compose logs
